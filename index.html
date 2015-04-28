@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1024" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Lidando com sistemas legado</title>
+  <meta name="description" content="apresentação sobre algumas abordagens para se lidar com sistemas legado de modo a não sacrificar a inovação" />
+  <meta name="author" content="Giuliano Melo" />
+  <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+  <link href="css/impress-demo.css" rel="stylesheet" />
+  <link rel="shortcut icon" href="favicon.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+
+<body class="impress-not-supported">
+  <div id="main"></div>
+  <div class="fallback-message">
+    <p>Seu browser <b>não suporta algumas funcionalidades necessárias para visualizar essa apresentação.</b> deste modo, será apresentada uma versão simplificada da mesma.</p>
+    <p>Para uma melhor experiência por favor use versões atuais dos seguintes browsers: <b>Chrome</b>, <b>Safari</b> ou <b>Firefox</b></p>
+  </div>
+  <div id="impress">
+    <div id="title" class="step" data-x="0" data-y="0" data-scale="4">
+      <span class="try">Melhorando o log do</span>
+      <h1>Rails</h1>
+      <h2>usando o <strong>Syslog</strong></h2>
+    </div>
+    <div id="its" class="step" data-x="850" data-y="3000" data-rotate="90" data-scale="4">
+      <p><strong>Syslog</strong> é um sistema padrão para mensagens de log. Ele permite a separação entre o sistema que gera as mensagens, um sistema que as recebe e outro que as analisa.</p>
+      <span class="footnote">Em 2009 o IETF formalizou o padrão syslog na <a href="http://tools.ietf.org/html/rfc5424">RFC 5424</a></span>
+    </div>
+    <div class="step" data-x="4500" data-y="2100" data-rotate="180" data-scale="4">
+      <p>Existem várias implementações de Syslog para várias plataformas e SOs, através de configuração é possível enviar as mensagens para um terminal(<em>console</em>), arquivo de log ou pela rede.</p>
+    </div>
+    <div class="step" data-x="5000" data-y="3900" data-rotate="180" data-scale="4">
+      <p>O Syslog categorizada as mensagens por uma <em>facility</em> e um nível de severidade.</p>
+    </div>
+    <div id="tiny" class="step" data-x="-1825" data-y="5325" data-z="-6000" data-rotate="300" data-scale="1">
+      <table>
+        <tbody>
+          <tr>
+            <th>Number</th>
+            <th>Keyword</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>0</td>
+            <td>kern</td>
+            <td>kernel messages</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>user</td>
+            <td>user-level messages</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>mail</td>
+            <td>mail system</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>daemon</td>
+            <td>system daemons</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>auth</td>
+            <td>security/authorization messages</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>syslog</td>
+            <td>messages generated internally by syslogd</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>lpr</td>
+            <td>line printer subsystem</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>news</td>
+            <td>network news subsystem</td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>uucp</td>
+            <td>UUCP subsystem</td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td></td>
+            <td>clock daemon</td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>authpriv</td>
+            <td>security/authorization messages</td>
+          </tr>
+          <tr>
+            <td>11</td>
+            <td>ftp</td>
+            <td>FTP daemon</td>
+          </tr>
+          <tr>
+            <td>12</td>
+            <td>-</td>
+            <td>NTP subsystem</td>
+          </tr>
+          <tr>
+            <td>13</td>
+            <td>-</td>
+            <td>log audit</td>
+          </tr>
+          <tr>
+            <td>14</td>
+            <td>-</td>
+            <td>log alert</td>
+          </tr>
+          <tr>
+            <td>15</td>
+            <td>cron</td>
+            <td>clock daemon</td>
+          </tr>
+          <tr>
+            <td>16</td>
+            <td>local0</td>
+            <td>local use 0 (local0)</td>
+          </tr>
+          <tr>
+            <td>17</td>
+            <td>local1</td>
+            <td>local use 1 (local1)</td>
+          </tr>
+          <tr>
+            <td>18</td>
+            <td>local2</td>
+            <td>local use 2 (local2)</td>
+          </tr>
+          <tr>
+            <td>19</td>
+            <td>local3</td>
+            <td>local use 3 (local3)</td>
+          </tr>
+          <tr>
+            <td>20</td>
+            <td>local4</td>
+            <td>local use 4 (local4)</td>
+          </tr>
+          <tr>
+            <td>21</td>
+            <td>local5</td>
+            <td>local use 5 (local5)</td>
+          </tr>
+          <tr>
+            <td>22</td>
+            <td>local6</td>
+            <td>local use 6 (local6)</td>
+          </tr>
+          <tr>
+            <td>23</td>
+            <td>local7</td>
+            <td>local use 7 (local7)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="step" data-x="-1825" data-y="7325" data-z="-7200" data-rotate="300" data-scale="1">
+      <table>
+        <tbody>
+          <tr>
+            <th>Code</th>
+            <th>Severity</th>
+            <th>Keyword</th>
+            <th>Description</th>
+            <th>General Description</th>
+          </tr>
+          <tr>
+            <td>0</td>
+            <td>Emergency</td>
+            <td>emerg (panic)</td>
+            <td>System is unusable.</td>
+            <td>A "panic" condition usually affecting multiple apps/servers/sites. At this level it would usually notify all tech staff on call.</td>
+          </tr>
+          <tr>
+            <td>1</td>
+            <td>Alert</td>
+            <td>alert</td>
+            <td>Action must be taken immediately.</td>
+            <td>Should be corrected immediately, therefore notify staff who can fix the problem. An example would be the loss of a primary ISP connection.</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Critical</td>
+            <td>crit</td>
+            <td>Critical conditions.</td>
+            <td>Should be corrected immediately, but indicates failure in a secondary system, an example is a loss of a backup ISP connection.</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Error</td>
+            <td>err (error)</td>
+            <td>Error conditions.</td>
+            <td>Non-urgent failures, these should be relayed to developers or admins; each item must be resolved within a given time.</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Warning</td>
+            <td>warning (warn)</td>
+            <td>Warning conditions.</td>
+            <td>Warning messages, not an error, but indication that an error will occur if action is not taken, e.g. file system 85% full - each item must be resolved within a given time.</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Notice</td>
+            <td>notice</td>
+            <td>Normal but significant condition.</td>
+            <td>Events that are unusual but not error conditions - might be summarized in an email to developers or admins to spot potential problems - no immediate action required.</td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Informational</td>
+            <td>info</td>
+            <td>Informational messages.</td>
+            <td>Normal operational messages - may be harvested for reporting, measuring throughput, etc. - no action required.</td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Debug</td>
+            <td>debug</td>
+            <td>Debug-level messages.</td>
+            <td>Info useful to developers for debugging the application, not useful during operations.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div id="package" class="step" data-x="-1825" data-y="9325" data-z="-8800" data-rotate="300" data-scale="1">
+      <p>Pacote Syslog: <code>&ltPRI&gt HEADER MSG</code></p>
+      <div class="footnote"><strong>PRI</strong> prioridade, calculada a partir da <a href="http://en.wikipedia.org/wiki/Syslog"><em>facility</em> e severidade</a></div>
+      <div class="footnote"><strong>Header</strong> <em>Timestamp</em> da mensagem gerada e <em>Hostname</em> ou IP de origem</div>
+      <div class="footnote"><strong>MSG</strong> contem a mensagem de log passada, geralmente com dois campos a <em>TAG</em> que categoriza a mensagem e o conteúdo da mesma.</div>
+    </div>
+    <div id="strangler" class="step" data-x="3500" data-y="-4850" data-rotate="270" data-scale="6">
+      <p><em>Rails Tagged Logging</em></p>
+    </div>
+    <div class="step" data-x="6700" data-y="-3500" data-scale="6">
+      <p>É um formatador de logs existente no <em>Active Support</em> do Rails que permite adicionar <em>tags</em> na mensagem de log.</p>
+      <p>Para ativá-lo simplesmente mude a configuração do <em>logger</em> para:</p>
+      <div class="footnote"><code>config.logger = ActiveSupport::TaggedLogging.new</code></div>
+    </div>
+    <div class="step" data-x="5600" data-y="-500" data-rotate="20" data-scale="4">
+      <p>É possível adicionar ao log uma tag contendo qualquer atributo do objeto <em>Request</em> do Rails</p>
+      <div class="footnote"><code>config.log_tags = [ :uuid, :remote_ip, :host ]</code></div>
+    </div>
+    <div class="step" data-x="7500" data-y="1000" data-scale="2">
+      <p>Também é possível passar um <em>lambda</em> e usar o retorno como tag</p>
+      <div class="footnote"><code>config.log_tags = [ lambda { |req| "time:#{Time.now.to_f}" } ]*</code></div>
+      <div class="footnote"><small><a href="http://zogovic.com/post/21138929607/running-time-in-rails-logs">*Exemplo para logar o tempo total da requisição</a></small></div>
+    </div>
+    <div id="versioning" class="step" data-x="7000" data-y="6000" data-rotate="270" data-scale="6">
+      <p><a href="https://github.com/abril/rails-tagged-syslog">Rails Tagged Syslog</a></p>
+    </div>
+    <div class="step" data-x="9800" data-y="7000" data-scale="6">
+      <p>Gem que combina a funcionalidade de <em>tagged logging</em> do Rails com Syslog</p>
+    </div>
+    <div class="step" data-x="14500" data-y="6000" data-rotate="20" data-scale="4">
+      <p>Essa gem inclui o <em>uuid</em> da requisição automaticamente, bem como o nome da aplicação nas mensagens do syslog. A <em>facility</em> usada é <strong>local7</strong></p>
+      <div class="footnote"><code>config.logger = Abril::TaggedSyslog.new</code></div>
+    </div>
+    <div class="step" data-x="14500" data-y="7500" data-scale="2">
+      <div class="footnote"><small><code>Apr  8 17:40:52 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Started GET "/" for 127.0.0.1 at 2015-04-08 17:40:52 -0300</code></small></div>
+    </div>
+    <div class="step" data-x="14500" data-y="8500" data-scale="2">
+      <p>A gem é compatível com as configurações de tags do <em>Rails Tagged Logging</em>.</p>
+      <p>A configuração do syslog é feita externamente, em seu SO.</p>
+    </div>
+    <div id="end" class="step" data-x="-5000" data-y="-4000" data-scale="5">
+      <p>Por que usar o <em>uuid</em> nativamente?</p>
+    </div>
+    <div class="step" data-x="-5000" data-y="0" data-scale="5">
+      <p>Filtrar um request inteiro no log! 😉</p>
+      <div class="footnote"><small><code>cat /var/log/development.log | grep aad67e4f-715a-4284-bd19-d3f75d19c29b</code></small></div>
+      <div class="log">
+        Apr 8 17:40:52 HDU15526.local AlxMidiaDataEntry[47416]: [DEBUG] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1]
+        <br> Apr 8 17:40:52 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Started GET "/" for 127.0.0.1 at 2015-04-08 17:40:52 -0300
+        <br> Apr 8 17:40:54 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Processing by ImagensController#index as HTML
+        <br> Apr 8 17:40:55 HDU15526.local AlxMidiaDataEntry[47416]: [DEBUG] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] MONGODB (101.6ms) media_domain_development['$cmd'].find({"count"=>"imagens", "query"=>{:marca=>"Alexandria"}, "fields"=>nil}).limit(-1)
+        <br> Apr 8 17:40:57 HDU15526.local AlxMidiaDataEntry[47416]: [DEBUG] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] MONGODB [DEBUG] Cursor#close 606057799041
+        <br> Apr 8 17:40:57 HDU15526.local AlxMidiaDataEntry[47416]: [DEBUG] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] MONGODB (2108.9ms) media_domain_development['imagens'].find({:marca=>"Alexandria"}).limit(15).sort([["updated_at", -1]])
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_search.html.erb (1.8ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_per_page.html.erb (1.8ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_pagination.html.erb (5.9ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_index_actions.html.erb (40.2ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_per_page.html.erb (0.3ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_pagination.html.erb (2.7ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_index_actions.html.erb (5.5ms)
+        <br> Apr 8 17:40:58 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered imagens/index.html.erb within layouts/application (442.1ms)
+        <br> Apr 8 17:41:00 HDU15526.local AlxMidiaDataEntry[47416]: [DEBUG] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] MONGODB (36.1ms) media_domain_development['imagens'].find({:_id=>nil}).limit(-1)
+        <br> Apr 8 17:41:00 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Rendered shared/_flash_message.html.erb (38.2ms)
+        <br> Apr 8 17:41:00 HDU15526.local AlxMidiaDataEntry[47416]: [INFO] [aad67e4f-715a-4284-bd19-d3f75d19c29b] [127.0.0.1] Completed 200 OK in 6080ms (Views: 2434.5ms)</div>
+    </div>
+    <div id="syslog" class="step" data-x="-5000" data-y="3500" data-scale="5">
+      <p>Por que usar Syslog?</p>
+    </div>
+    <div id="syslog-list" class="step" data-x="-5000" data-y="5500" data-scale="5">
+      <ul>
+        <li>Permite centralizar todos os logs do pool de máquinas em um só servidor.</li>
+        <li>Logs padronizados e por isso "parseáveis"</li>
+        <li>Fim dos problemas de disco cheio nos hosts.</li>
+        <li>Possibilidade de usar ferramentas para manipular e extrair informações dos logs</li>
+        <li>Possibilidade de emitir alertas em caso de problemas.</li>
+      </ul>
+    </div>
+    <div id="compatibility" class="step" data-x="-5000" data-y="8500" data-scale="5">
+      <ul>
+        <li>Compatibilidade: Rails > 3.0</li>
+        <li><a href="https://github.com/abril/rails-tagged-syslog">Gem Rails-Tagged-Syslog</a></li>
+        <li><a href="http://api.rubyonrails.org/classes/ActiveSupport/TaggedLogging.html">Active Support Tagged Logging</a></li>
+        <li><a href="http://en.wikipedia.org/wiki/Syslog">Syslog</a></li>
+        <li><a href="https://syslog-ng.org/">Syslog-ng</a></li>
+      </ul>
+    </div>
+    <div id="questions" class="step" data-x="0" data-y="-9000" data-rotate="90" data-scale="4">
+      <span class="try">Dúvidas, perguntas, observações???</span>
+      <span class="footnote">giuliano.melo@abril.com.br</span>
+      <span class="footnote">twitter: @inhiding</span>
+    </div>
+    <div id="overview" class="step" data-x="3000" data-y="1500" data-scale="20">
+    </div>
+  </div>
+  <div class="hint">
+    <p>Use a barra de espaços para passar para o próximo slide.</p>
+  </div>
+  <script>
+  if ("ontouchstart" in document.documentElement) {
+    document.querySelector(".hint").innerHTML = "<p>Use as setas para direita ou esquerda para navegar</p>";
+  }
+  </script>
+  <script src="js/impress.js"></script>
+  <script>
+  impress().init();
+  </script>
+</body>
+
+</html>
